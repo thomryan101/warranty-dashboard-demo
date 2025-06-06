@@ -13,7 +13,7 @@ def load_data():
 df = load_data()
 
 # Get selected CM Number from URL query params
-query_params = st.experimental_get_query_params()
+query_params = st.query_params
 selected_cm = query_params.get("cm", [None])[0]
 
 if selected_cm:
