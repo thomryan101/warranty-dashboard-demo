@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
+from urllib.parse import urlencode
 
-st.set_page_config(layout="wide")  # ✅ Must be FIRST Streamlit command
+st.set_page_config(layout="wide")
 
 def load_data():
     df = pd.read_excel("claims_data_for_streamlit.xlsx")
@@ -11,47 +12,67 @@ def load_data():
 
 df = load_data()
 
-st.title("Warranty Claims Dashboard - Demo")
+# Get selected CM Number from URL query params
+query_params = st.experimental_get_query_params()
+selected_cm = query_params.get("cm", [None])[0]
 
-# Sidebar Filters
-st.sidebar.header("Filter Claims")
-customer_filter = st.sidebar.text_input("Customer Number")
-cm_filter = st.sidebar.text_input("CM Number")
-date_range = st.sidebar.date_input("Date Received Range", [])
+if selected_cm:
+    # ------------------ Claim Detail View ------------------
+    st.title(f"Claim Detail: {selected_cm}")
+    claim = df[df["CM Number"] == selected_cm].iloc[0]
 
-filtered_df = df.copy()
-if customer_filter:
-    filtered_df = filtered_df[filtered_df["Customer Number"].astype(str).str.contains(customer_filter)]
-if cm_filter:
-    filtered_df = filtered_df[filtered_df["CM Number"].astype(str).str.contains(cm_filter)]
-if len(date_range) == 2:
-    filtered_df = filtered_df[(filtered_df["Date Received"] >= pd.to_datetime(date_range[0])) &
-                               (filtered_df["Date Received"] <= pd.to_datetime(date_range[1]))]
+    cols = st.columns(2)
+    with cols[0]:
+        st.text(f"Customer #: {claim['Customer Number']}")
+        st.text(f"Claim #: {claim['Claim Number']}")
+        st.text(f"Date Received: {claim['Date Received']}")
+        st.text(f"Status: {claim['Status']}")
+    with cols[1]:
+        st.text(f"Part Value: {claim['Part Value']}")
+        st.text(f"Quantity: {claim['Quantity']}")
+        st.text(f"RGA #: {claim['RGA Number']}")
+        st.text(f"Final Input: {claim['Final Input']}")
 
-# Main Table View
-st.subheader("Open Claims")
-st.dataframe(filtered_df, use_container_width=True)
+    st.markdown("---")
+    st.text_area("Notes / Complaint", value="[Placeholder for complaint text]", height=150)
 
-# Claim Detail View
-st.subheader("Claim Detail Viewer")
-selected_cm = st.selectbox("Select CM Number", filtered_df["CM Number"].dropna().unique())
-claim = filtered_df[filtered_df["CM Number"] == selected_cm].iloc[0]
+    st.button("Mark as Processed (placeholder)")
+    st.button("Send Email Response (placeholder)")
+    st.button("Analyze with GPT (disabled)")
 
-cols = st.columns(2)
-with cols[0]:
-    st.text(f"Customer #: {claim['Customer Number']}")
-    st.text(f"Claim #: {claim['Claim Number']}")
-    st.text(f"Date Received: {claim['Date Received']}")
-    st.text(f"Status: {claim['Status']}")
-with cols[1]:
-    st.text(f"Part Value: {claim['Part Value']}")
-    st.text(f"Quantity: {claim['Quantity']}")
-    st.text(f"RGA #: {claim['RGA Number']}")
-    st.text(f"Final Input: {claim['Final Input']}")
+    st.markdown("[Back to All Claims](./)")
 
-st.markdown("---")
-st.text_area("Notes / Complaint", value="[Placeholder for complaint text]", height=100)
+else:
+    # ------------------ Open Claims List ------------------
+    st.title("Warranty Claims Dashboard - Demo")
 
-st.button("Mark as Processed (placeholder)")
-st.button("Send Email Response (placeholder)")
-st.button("Analyze with GPT (disabled)")
+    # Sidebar Filters
+    st.sidebar.header("Filter Claims")
+    customer_filter = st.sidebar.text_input("Customer Number")
+    cm_filter = st.sidebar.text_input("CM Number")
+    date_range = st.sidebar.date_input("Date Received Range", [])
+
+    filtered_df = df.copy()
+    if customer_filter:
+        filtered_df = filtered_df[filtered_df["Customer Number"].astype(str).str.contains(customer_filter)]
+    if cm_filter:
+        filtered_df = filtered_df[filtered_df["CM Number"].astype(str).str.contains(cm_filter)]
+    if len(date_range) == 2:
+        filtered_df = filtered_df[(filtered_df["Date Received"] >= pd.to_datetime(date_range[0])) &
+                                   (filtered_df["Date Received"] <= pd.to_datetime(date_range[1]))]
+
+    st.subheader("Open Claims")
+
+    # Create clickable CM Numbers
+    def make_clickable(cm):
+        url = f"?{urlencode({'cm': cm})}"
+        return f"[**{cm}**]({url})"
+
+    display_df = filtered_df.copy()
+    display_df["CM Number"] = display_df["CM Number"].apply(make_clickable)
+
+    # Show as markdown to allow links
+    st.markdown(
+        display_df.to_markdown(index=False),
+        unsafe_allow_html=True
+    )
