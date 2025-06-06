@@ -29,15 +29,15 @@ if selected_cm:
 
         cols = st.columns(2)
         with cols[0]:
-            st.text(f"Customer #: {claim['Customer Number']}")
-            st.text(f"Claim #: {claim['Claim Number']}")
-            st.text(f"Date Received: {claim['Date Received']}")
-            st.text(f"Status: {claim['Status']}")
+            st.text(f"Customer #: {claim.get('Customer Number', 'N/A')}")
+            st.text(f"Claim #: {claim.get('Claim Number', 'N/A')}")
+            st.text(f"Date Received: {claim.get('Date Received', 'N/A')}")
+            st.text(f"Status: {claim.get('Status', 'N/A')}")
         with cols[1]:
-            st.text(f"Part Value: {claim['Part Value']}")
-            st.text(f"Quantity: {claim['Quantity']}")
-            st.text(f"RGA #: {claim['RGA Number']}")
-            st.text(f"Final Input: {claim['Final Input']}")
+            st.text(f"Part Value: {claim.get('Part Value', 'N/A')}")
+            st.text(f"Quantity: {claim.get('Quantity', 'N/A')}")
+            st.text(f"RGA #: {claim.get('RGA Number', 'N/A')}")
+            st.text(f"Final Input: {claim.get('Final Input', 'N/A')}")
 
         st.markdown("---")
         st.text_area("Notes / Complaint", value="[Placeholder for complaint text]", height=150)
