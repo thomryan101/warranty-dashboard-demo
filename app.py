@@ -1,10 +1,8 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(layout="wide")  # ✅ This one stays
+st.set_page_config(layout="wide")  # ✅ Must be FIRST Streamlit command
 
-# Load claims data
-@st.cache_data
 def load_data():
     df = pd.read_excel("claims_data_for_streamlit.xlsx")
     df["Claim Date"] = pd.to_datetime(df["Claim Date"], errors='coerce')
