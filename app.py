@@ -63,13 +63,32 @@ else:
 
     st.subheader("Open Claims")
 
-    # Create clickable CM Numbers
     def make_clickable(cm):
         url = f"?{urlencode({'cm': cm})}"
-        return f"[**{cm}**]({url})"
+        return f'<a href="{url}">{cm}</a>'
 
     display_df = filtered_df.copy()
     display_df["CM Number"] = display_df["CM Number"].apply(make_clickable)
 
-    # Use st.dataframe for proper rendering and scroll behavior
-    st.dataframe(display_df, use_container_width=True, height=800)
+    # Render scrollable HTML table with clickable links
+    st.markdown("""
+        <style>
+        .scrollable-table {
+            max-height: 800px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 6px 12px;
+            border: 1px solid #ccc;
+            text-align: left;
+            font-size: 14px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown('<div class="scrollable-table">' + display_df.to_html(escape=False, index=False) + '</div>', unsafe_allow_html=True)
