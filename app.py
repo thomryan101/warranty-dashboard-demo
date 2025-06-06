@@ -1,11 +1,10 @@
 import streamlit as st
 import pandas as pd
 
-st.set_page_config(layout="wide")
+st.set_page_config(layout="wide")  # ✅ This one stays
 
 # Load claims data
 @st.cache_data
-
 def load_data():
     df = pd.read_excel("claims_data_for_streamlit.xlsx")
     df["Claim Date"] = pd.to_datetime(df["Claim Date"], errors='coerce')
@@ -14,7 +13,6 @@ def load_data():
 
 df = load_data()
 
-st.set_page_config(layout="wide")
 st.title("Warranty Claims Dashboard - Demo")
 
 # Sidebar Filters
