@@ -58,7 +58,7 @@ else:
     metric_cols[0].metric("Total Claims", total_claims)
     metric_cols[1].metric("Processed Claims", processed_claims)
     metric_cols[2].metric("> 90 Days Old", over_90_days)
-    metric_cols[3].metric("Oldest Claim", oldest_claim.date() if pd.notnull(oldest_claim) else "N/A")
+    metric_cols[3].metric("Oldest Claim", str(oldest_claim.date()) if pd.notnull(oldest_claim) else "N/A")
 
     # Sidebar Filters
     st.sidebar.header("Filter Claims")
