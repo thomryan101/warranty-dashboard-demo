@@ -71,8 +71,5 @@ else:
     display_df = filtered_df.copy()
     display_df["CM Number"] = display_df["CM Number"].apply(make_clickable)
 
-    # Show with scrollable container to display ~30 rows
-    st.markdown(
-        f"<div style='max-height: 800px; overflow-y: auto'>{display_df.to_markdown(index=False)}</div>",
-        unsafe_allow_html=True
-    )
+    # Use st.dataframe for proper rendering and scroll behavior
+    st.dataframe(display_df, use_container_width=True, height=800)
