@@ -8,6 +8,7 @@ def load_data():
     df = pd.read_excel("claims_data_for_streamlit.xlsx")
     df["Claim Date"] = pd.to_datetime(df["Claim Date"], errors='coerce')
     df["Date Received"] = pd.to_datetime(df["Date Received"], errors='coerce')
+    df["CM Number"] = df["CM Number"].astype(str)  # Ensure all CM Numbers are strings for matching
     return df
 
 df = load_data()
@@ -86,8 +87,9 @@ else:
     st.subheader("Open Claims")
 
     def make_clickable(cm):
-        url = f"?{urlencode({'cm': cm})}"
-        return f'<a href="{url}">{cm}</a>'
+        cm_str = str(cm)
+        url = f"?{urlencode({'cm': cm_str})}"
+        return f'<a href="{url}">{cm_str}</a>'
 
     display_df = filtered_df.copy()
     display_df["CM Number"] = display_df["CM Number"].apply(make_clickable)
