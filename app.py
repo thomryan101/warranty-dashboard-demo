@@ -15,7 +15,9 @@ df = load_data()
 
 # Get selected CM Number from URL query params
 query_params = st.query_params
-selected_cm = query_params.get("cm", [None])[0]
+selected_cm = query_params.get("cm")
+if isinstance(selected_cm, list):
+    selected_cm = selected_cm[0]
 
 if selected_cm:
     # ------------------ Claim Detail View ------------------
