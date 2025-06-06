@@ -57,9 +57,12 @@ else:
         filtered_df = filtered_df[filtered_df["Customer Number"].astype(str).str.contains(customer_filter)]
     if cm_filter:
         filtered_df = filtered_df[filtered_df["CM Number"].astype(str).str.contains(cm_filter)]
-    if len(date_range) == 2:
+    if len(date_range) == 2 and all(date_range):
         filtered_df = filtered_df[(filtered_df["Date Received"] >= pd.to_datetime(date_range[0])) &
                                    (filtered_df["Date Received"] <= pd.to_datetime(date_range[1]))]
+
+    st.write(f"Loaded {len(df)} total claims.")
+    st.write(f"Displaying {len(filtered_df)} claims after filters.")
 
     st.subheader("Open Claims")
 
