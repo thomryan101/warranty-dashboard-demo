@@ -74,8 +74,10 @@ else:
     st.markdown("""
         <style>
         .scrollable-table {
-            max-height: 800px;
-            overflow-y: scroll;
+            height: 800px;
+            overflow-y: auto;
+            overflow-x: auto;
+            display: block;
             border: 1px solid #ccc;
         }
         table {
