@@ -73,12 +73,12 @@ else:
     # Render scrollable HTML table with clickable links
     st.markdown("""
         <style>
-        .scrollable-table {
+        .scrollable-table-wrapper {
             height: 800px;
-            overflow-y: auto;
+            overflow-y: scroll;
             overflow-x: auto;
-            display: block;
             border: 1px solid #ccc;
+            padding: 5px;
         }
         table {
             width: 100%;
@@ -93,4 +93,4 @@ else:
         </style>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="scrollable-table">' + display_df.to_html(escape=False, index=False) + '</div>', unsafe_allow_html=True)
+    st.markdown('<div class="scrollable-table-wrapper">' + display_df.to_html(escape=False, index=False) + '</div>', unsafe_allow_html=True)
