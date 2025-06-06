@@ -46,6 +46,20 @@ else:
     # ------------------ Open Claims List ------------------
     st.title("Warranty Claims Dashboard - Demo")
 
+    # Metrics Summary
+    total_claims = len(df)
+    processed_claims = len(df[df['Status'].astype(str).str.lower() == 'processed'])
+    unprocessed_claims = total_claims - processed_claims
+    oldest_claim = df['Date Received'].min()
+    over_90_days = len(df[(pd.Timestamp.today() - df['Date Received']).dt.days > 90])
+
+    st.markdown("### 📊 Summary Metrics")
+    metric_cols = st.columns(4)
+    metric_cols[0].metric("Total Claims", total_claims)
+    metric_cols[1].metric("Processed Claims", processed_claims)
+    metric_cols[2].metric("> 90 Days Old", over_90_days)
+    metric_cols[3].metric("Oldest Claim", oldest_claim.date() if pd.notnull(oldest_claim) else "N/A")
+
     # Sidebar Filters
     st.sidebar.header("Filter Claims")
     customer_filter = st.sidebar.text_input("Customer Number")
