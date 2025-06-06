@@ -19,26 +19,31 @@ selected_cm = query_params.get("cm", [None])[0]
 if selected_cm:
     # ------------------ Claim Detail View ------------------
     st.title(f"Claim Detail: {selected_cm}")
-    claim = df[df["CM Number"] == selected_cm].iloc[0]
+    matching_claims = df[df["CM Number"] == selected_cm]
 
-    cols = st.columns(2)
-    with cols[0]:
-        st.text(f"Customer #: {claim['Customer Number']}")
-        st.text(f"Claim #: {claim['Claim Number']}")
-        st.text(f"Date Received: {claim['Date Received']}")
-        st.text(f"Status: {claim['Status']}")
-    with cols[1]:
-        st.text(f"Part Value: {claim['Part Value']}")
-        st.text(f"Quantity: {claim['Quantity']}")
-        st.text(f"RGA #: {claim['RGA Number']}")
-        st.text(f"Final Input: {claim['Final Input']}")
+    if not matching_claims.empty:
+        claim = matching_claims.iloc[0]
 
-    st.markdown("---")
-    st.text_area("Notes / Complaint", value="[Placeholder for complaint text]", height=150)
+        cols = st.columns(2)
+        with cols[0]:
+            st.text(f"Customer #: {claim['Customer Number']}")
+            st.text(f"Claim #: {claim['Claim Number']}")
+            st.text(f"Date Received: {claim['Date Received']}")
+            st.text(f"Status: {claim['Status']}")
+        with cols[1]:
+            st.text(f"Part Value: {claim['Part Value']}")
+            st.text(f"Quantity: {claim['Quantity']}")
+            st.text(f"RGA #: {claim['RGA Number']}")
+            st.text(f"Final Input: {claim['Final Input']}")
 
-    st.button("Mark as Processed (placeholder)")
-    st.button("Send Email Response (placeholder)")
-    st.button("Analyze with GPT (disabled)")
+        st.markdown("---")
+        st.text_area("Notes / Complaint", value="[Placeholder for complaint text]", height=150)
+
+        st.button("Mark as Processed (placeholder)")
+        st.button("Send Email Response (placeholder)")
+        st.button("Analyze with GPT (disabled)")
+    else:
+        st.error(f"No claim found with CM Number: {selected_cm}")
 
     st.markdown("[Back to All Claims](./)")
 
